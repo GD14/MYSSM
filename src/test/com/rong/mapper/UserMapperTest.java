@@ -7,6 +7,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,22 +20,17 @@ import static org.junit.Assert.*;
  */
 public class UserMapperTest {
 
-    private SqlSessionFactory sessionFactory;
+    private ApplicationContext applicationContext;
     @Before
     public void setUp() throws IOException {
-        String resource = "mybatis/mybatis.xml";
-        InputStream inputStream= Resources.getResourceAsStream(resource);
-       sessionFactory=new SqlSessionFactoryBuilder().build(inputStream);
+        applicationContext=new ClassPathXmlApplicationContext("spring/spring.xml");
     }
     @Test
 
     public void test(){
-        SqlSession sqlSession= sessionFactory.openSession();
-        UserMapper userMapper=sqlSession.getMapper(UserMapper.class);
+        UserMapper userMapper= (UserMapper) applicationContext.getBean("userMapper");
         User user= userMapper.findUserById(1);
-
         System.out.println(user);
-        sqlSession.close();
     }
 
 }
